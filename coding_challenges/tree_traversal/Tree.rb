@@ -14,7 +14,7 @@ def dfs(tree_node,search_value)
     puts "Current Node = #{@current_node.payload}"
     return @current_node
   else
-    puts "Invlaid Node = #{@current_node.payload}"
+    puts "Invalid Node = #{@current_node.payload}"
     if !tree_node.children.empty?
       tree_node.children.each do |node|
         if @current_node.payload != search_value
@@ -26,21 +26,48 @@ def dfs(tree_node,search_value)
 end
 
 
-# Attempt at optimizing - doesn't work yet.
-def dfs_opt(tree_node,search_value)
-  @current_node = tree_node
-  if @current_node.payload != search_value
-    puts "Invalid Node = #{@current_node.payload}"
-    if !tree_node.children.empty?
-      tree_node.children.each do |node|
-          dfs(node,search_value)
-      end
-    end  
-  else 
-    puts "Current Node = #{@current_node.payload}"
-    return @current_node
+def bfs(node,search_value)
+  puts "\nStarting BFS"
+  
+  # create Queue
+  q = Queue.new
+  
+  #create working node
+  current_node = node
+
+  # check for search success, loop on failure.
+  while current_node.payload != search_value  
+
+    # push child nodes into queue
+    current_node.children.each do |node| 
+      q.nq(node)
+    end
+
+    # pop value off queue to check next
+    current_node = q.dq()  
   end
+
+  puts current_node.payload
+  return current_node
 end
+
+
+
+class Queue
+    def initialize
+        @queue = []
+    end
+
+    def nq(item)
+        @queue.push(item)
+    end
+
+    def dq
+        @queue.shift
+    end
+end
+
+
 
 # The "Leafs" of a tree, elements that have no children
 fifth_node    = Tree.new(5, [])
@@ -57,5 +84,6 @@ fifth_node = Tree.new(5, [ninth_node])
 # The "Trunk" of the tree
 trunk   = Tree.new(2, [seventh_node, fifth_node])
 
-dfs(trunk,11)
-dfs_opt(trunk,11)
+puts dfs(trunk,11)
+puts bfs(trunk,11)
+
